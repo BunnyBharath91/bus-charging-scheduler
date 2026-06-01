@@ -7,8 +7,9 @@ Single-process Python + Streamlit scheduler for the Bengaluru-Kochi electric bus
 1. Create and activate a virtual environment.
 2. Install dependencies:
    - `pip install -r requirements.txt`
-3. Start the app:
+3. Start the app (runs on port 8000 via `.streamlit/config.toml`):
    - `streamlit run app.py`
+   - Or explicitly: `streamlit run app.py --server.port 8000`
 
 ## Project structure
 
