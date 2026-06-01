@@ -43,10 +43,10 @@ def main() -> None:
     schedule_result = scheduler.run(selected_scenario)
 
     st.subheader("Per-Bus Timetable")
-    st.dataframe(build_bus_timetable_rows(schedule_result), use_container_width=True)
+    st.dataframe(build_bus_timetable_rows(schedule_result), width="stretch")
 
     st.subheader("Per-Station Timetable")
-    st.dataframe(build_station_timetable_rows(schedule_result), use_container_width=True)
+    st.dataframe(build_station_timetable_rows(schedule_result), width="stretch")
 
     st.subheader("Objective Breakdown")
     st.json(schedule_result.objective_breakdown.model_dump(mode="json"), expanded=True)

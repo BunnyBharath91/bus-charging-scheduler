@@ -8,19 +8,19 @@ from bus_scheduler.models.results import ScheduleResult
 from bus_scheduler.models.scenario import ScenarioConfig
 
 
-def build_scenario_summary_rows(scenario: ScenarioConfig) -> List[Dict[str, object]]:
+def build_scenario_summary_rows(scenario: ScenarioConfig) -> List[Dict[str, str]]:
     """Return simple summary rows for the selected scenario."""
     return [
         {"field": "scenario_id", "value": scenario.scenario_id},
         {"field": "description", "value": scenario.description},
-        {"field": "bus_count", "value": len(scenario.buses)},
-        {"field": "station_count", "value": len(scenario.stations)},
-        {"field": "battery_range_km", "value": scenario.constants.battery_range_km},
-        {"field": "charge_duration_minutes", "value": scenario.constants.charge_duration_minutes},
-        {"field": "speed_kmph", "value": scenario.constants.speed_kmph},
-        {"field": "weight_individual", "value": scenario.weights.individual},
-        {"field": "weight_operator", "value": scenario.weights.operator},
-        {"field": "weight_overall", "value": scenario.weights.overall},
+        {"field": "bus_count", "value": str(len(scenario.buses))},
+        {"field": "station_count", "value": str(len(scenario.stations))},
+        {"field": "battery_range_km", "value": str(scenario.constants.battery_range_km)},
+        {"field": "charge_duration_minutes", "value": str(scenario.constants.charge_duration_minutes)},
+        {"field": "speed_kmph", "value": str(scenario.constants.speed_kmph)},
+        {"field": "weight_individual", "value": str(scenario.weights.individual)},
+        {"field": "weight_operator", "value": str(scenario.weights.operator)},
+        {"field": "weight_overall", "value": str(scenario.weights.overall)},
     ]
 
 
@@ -58,12 +58,12 @@ def build_bus_timetable_rows(result: ScheduleResult) -> List[Dict[str, object]]:
                     "arrival_at_destination": (
                         bus_result.destination_time.strftime("%H:%M")
                         if event_index == len(bus_result.charging_events) - 1
-                        else ""
+                        else None
                     ),
                     "total_wait_minutes": (
                         bus_result.total_wait_minutes
                         if event_index == len(bus_result.charging_events) - 1
-                        else ""
+                        else None
                     ),
                 }
             )
