@@ -24,9 +24,9 @@ def build_scenario_summary_rows(scenario: ScenarioConfig) -> List[Dict[str, str]
     ]
 
 
-def build_bus_timetable_rows(result: ScheduleResult) -> List[Dict[str, object]]:
+def build_bus_timetable_rows(result: ScheduleResult) -> List[Dict[str, str]]:
     """Flatten per-bus timeline into table rows."""
-    rows: List[Dict[str, object]] = []
+    rows: List[Dict[str, str]] = []
     for bus_result in result.per_bus:
         if not bus_result.charging_events:
             rows.append(
@@ -36,15 +36,16 @@ def build_bus_timetable_rows(result: ScheduleResult) -> List[Dict[str, object]]:
                     "direction": bus_result.direction,
                     "station": "-",
                     "arrival_at_station": "-",
-                    "wait_minutes": 0,
+                    "wait_minutes": "0",
                     "charge_start": "-",
                     "charge_end": "-",
                     "arrival_at_destination": bus_result.destination_time.strftime("%H:%M"),
-                    "total_wait_minutes": bus_result.total_wait_minutes,
+                    "total_wait_minutes": str(bus_result.total_wait_minutes),
                 }
             )
             continue
         for event_index, event in enumerate(bus_result.charging_events):
+            is_last_event = event_index == len(bus_result.charging_events) - 1
             rows.append(
                 {
                     "bus_id": bus_result.bus_id,
@@ -52,40 +53,40 @@ def build_bus_timetable_rows(result: ScheduleResult) -> List[Dict[str, object]]:
                     "direction": bus_result.direction,
                     "station": event.station_id,
                     "arrival_at_station": event.arrival_time.strftime("%H:%M"),
-                    "wait_minutes": event.wait_minutes,
+                    "wait_minutes": str(event.wait_minutes),
                     "charge_start": event.charge_start_time.strftime("%H:%M"),
                     "charge_end": event.charge_end_time.strftime("%H:%M"),
                     "arrival_at_destination": (
                         bus_result.destination_time.strftime("%H:%M")
-                        if event_index == len(bus_result.charging_events) - 1
-                        else None
+                        if is_last_event
+                        else ""
                     ),
                     "total_wait_minutes": (
-                        bus_result.total_wait_minutes
-                        if event_index == len(bus_result.charging_events) - 1
-                        else None
+                        str(bus_result.total_wait_minutes)
+                        if is_last_event
+                        else ""
                     ),
                 }
             )
     return rows
 
 
-def build_station_timetable_rows(result: ScheduleResult) -> List[Dict[str, object]]:
+def build_station_timetable_rows(result: ScheduleResult) -> List[Dict[str, str]]:
     """Flatten per-station ordering into table rows."""
-    rows: List[Dict[str, object]] = []
+    rows: List[Dict[str, str]] = []
     for station_result in result.per_station:
         for order_index, event in enumerate(station_result.events, start=1):
             rows.append(
                 {
                     "station": station_result.station_id,
-                    "order": order_index,
+                    "order": str(order_index),
                     "bus_id": event.bus_id,
                     "operator": event.operator_id,
                     "arrival_at_station": event.arrival_time.strftime("%H:%M"),
-                    "wait_minutes": event.wait_minutes,
+                    "wait_minutes": str(event.wait_minutes),
                     "charge_start": event.charge_start_time.strftime("%H:%M"),
                     "charge_end": event.charge_end_time.strftime("%H:%M"),
-                    "charger_slot": event.charger_slot_index,
+                    "charger_slot": str(event.charger_slot_index),
                 }
             )
     return rows
