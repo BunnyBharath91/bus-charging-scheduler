@@ -1,2 +1,2 @@
-[server]
-port = 8000
+# Streamlit Community Cloud expects the default port (8501).
+# For local dev on port 8000, run: streamlit run app.py --server.port 8000
